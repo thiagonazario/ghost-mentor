@@ -1,3 +1,5 @@
+![Lint Status](https://github.com/thiagonazario/ghost-mentor/actions/workflows/lint.yml/badge.svg)
+
 # 👻 Ghost-Mentor: AI-Driven DevSecOps Interceptor
 
 ![Ghost-Mentor Banner](ghost-mentor.png)
