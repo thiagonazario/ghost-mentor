@@ -10,22 +10,25 @@
 
 ---
 
+## 🏛️ Architectural Purpose
+In a modern **OpEx-driven cloud**, technical friction is a financial leak. **Ghost-Mentor** reduces the 'Cognitive Load' on engineering teams by providing immediate architectural mentorship, preventing hours of wasted troubleshooting and ensuring every fix follows security best practices.
+
 ## 🚀 Key Features
 
-* **Real-time Interception**: Acts as a pipe interceptor for AWS, Docker, and Kubernetes logs.
-* **Actionable Mentorship**: Instead of cryptic logs, developers receive clear resolution steps.
-* **Hardened by Design**: Every suggestion reinforces industry best practices (Least Privilege, Immutability, and Secrets Management).
-* **Zero Dependencies**: Pure Python implementation, ready for any CI/CD environment (Jenkins, GitHub Actions, GitLab CI).
+* **Real-time Interception**: Acts as a runtime hook for Python environments or a pipe interceptor for AWS/K8s logs.
+* **Actionable Mentorship**: Replaces cryptic tracebacks with clear, security-focused resolution steps.
+* **Hardened by Design**: Every suggestion enforces industry standards (Least Privilege, Immutability, and Network Isolation).
+* **Zero Dependencies**: Pure Python implementation, lightweight and ready for any CI/CD environment (Jenkins, GitHub Actions, GitLab CI).
 
-## 🛠️ Supported Patterns
+## 🛠️ Supported Patterns & Hardening
 
-| Domain | Error Pattern | Mentor Guidance |
+| Domain | Pattern Detected | Hardened by Design Guidance |
 | :--- | :--- | :--- |
-| **AWS IAM** | `AccessDenied` | Permission Gap Analysis & Policy Snippets |
-| **AWS S3** | `NoSuchBucket` | Region & Naming Convention Validation |
-| **Docker** | `Auth Failures` | Registry Lifecycle & Secrets Management |
-| **Kubernetes** | `ImagePullBackOff` | Tag Standardization & PullSecrets Check |
-| **Kubernetes** | `CrashLoopBackOff` | Stability Analysis & Probe Configuration |
+| **AWS S3** | `AccessDenied` | S3 Block Public Access & Bucket Policy Hardening |
+| **AWS IAM** | `Unauthorized` | Permission Boundaries & Least Privilege Analysis |
+| **Docker** | `Auth Failures` | Registry Lifecycle & Rootless Container Best Practices |
+| **Kubernetes** | `ImagePullBackOff` | PullSecret Scoping & Image Tag Standardization |
+| **Kubernetes** | `CrashLoop` | Probes Configuration & Resource Limit Stability |
 
 ---
 
@@ -57,16 +60,24 @@ sequenceDiagram
     end
 ```
 ## 💻 Quick Start
-1. Integration via Pipe
-Integrate Ghost-Mentor into your existing workflows by redirecting stderr (2>&1) to the script:
+1. Direct Integration (Python Hook)
+Initialize Ghost-Mentor at the beginning of your script to intercept all unhandled exceptions:
+
+```bash
+from ghost_mentor import boot_mentor
+
+boot_mentor()
+# Your cloud logic here...
+```
+2. Pipeline Integration (CLI Pipe)
+Redirect `stderr` to Ghost-Mentor in your CI/CD runner:# Example with Kubernetes Logs
 
 ```bash
 # Example with AWS CLI
-aws s3 cp my_file.txt s3://protected-bucket/ 2>&1 | python3 ghost_mentor.py
-
-# Example with Kubernetes Logs
-kubectl logs pod/my-app 2>&1 | python3 ghost_mentor.py
+aws s3 cp file.txt s3://locked-bucket/ 2>&1 | python3 ghost_mentor.py
 ```
 
 ## 🛡️ Sovereignty & Philosophy
-This tool is part of the Ghost-Architect ecosystem, focused on creating self-healing infrastructure and reducing cognitive load for high-intensity engineering teams.
+This tool is a core component of the Ghost-Architect ecosystem. Our mission is to transform DevOps into a "Hardened by Design" standard, where infrastructure is not just automated, but inherently secure and self-correcting.
+---
+*Built for the next paradigm of Cloud Engineering.*
