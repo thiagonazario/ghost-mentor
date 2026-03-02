@@ -1,6 +1,8 @@
 # 👻 Ghost-Mentor: AI-Driven DevSecOps Interceptor
 
-**Ghost-Mentor** is a lightweight Python-based engine designed to bridge the gap between complex infrastructure failures and developer productivity. By intercepting pipeline errors in real-time, it provides actionable, "Hardened by Design" guidance directly in the terminal or PR.
+![Ghost-Mentor Banner](ghost-mentor.png)
+
+**Ghost-Mentor** is a lightweight Python-based engine designed to bridge the gap between complex infrastructure failures and developer productivity. By intercepting pipeline errors in real-time, it provides actionable, **"Hardened by Design"** guidance directly in the terminal or CI/CD logs.
 
 > "Solving Complex Problems with Elegance & Without Drama."
 
@@ -17,13 +19,15 @@
 
 | Domain | Error Pattern | Mentor Guidance |
 | :--- | :--- | :--- |
-| **AWS IAM** | AccessDenied | Permission Gap Analysis & Policy Snippets |
-| **AWS S3** | NoSuchBucket | Region & Naming Convention Validation |
-| **Docker** | Auth Failures | Registry Lifecycle & Secrets Management |
-| **Kubernetes** | ImagePullBackOff | Tag Standardization & PullSecrets Check |
-| **Kubernetes** | CrashLoopBackOff | Stability Analysis & Probe Configuration |
+| **AWS IAM** | `AccessDenied` | Permission Gap Analysis & Policy Snippets |
+| **AWS S3** | `NoSuchBucket` | Region & Naming Convention Validation |
+| **Docker** | `Auth Failures` | Registry Lifecycle & Secrets Management |
+| **Kubernetes** | `ImagePullBackOff` | Tag Standardization & PullSecrets Check |
+| **Kubernetes** | `CrashLoopBackOff` | Stability Analysis & Probe Configuration |
 
-## 📦 Quick Start
+---
+
+## 📦 How it Works (The Feedback Loop)
 
 ```mermaid
 sequenceDiagram
@@ -48,11 +52,19 @@ sequenceDiagram
         D->>D: Quick Fix & Learning
     else Success
         AWS-->>P: Continue Deployment 🚀
+    end
 ```
+## 💻 Quick Start
+1. Integration via Pipe
+Integrate Ghost-Mentor into your existing workflows by redirecting stderr (2>&1) to the script:
+
+```bash
+# Example with AWS CLI
+aws s3 cp my_file.txt s3://protected-bucket/ 2>&1 | python3 ghost_mentor.py
 
 # Example with Kubernetes Logs
-kubectl logs pod/my-app | python3 ghost_mentor.py
+kubectl logs pod/my-app 2>&1 | python3 ghost_mentor.py
 ```
 
-### 🛡️ Sovereignty & Philosophy
+## 🛡️ Sovereignty & Philosophy
 This tool is part of the Ghost-Architect ecosystem, focused on creating self-healing infrastructure and reducing cognitive load for high-intensity engineering teams.
