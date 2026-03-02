@@ -25,8 +25,30 @@
 
 ## 📦 Quick Start
 
-#
+```mermaid
+sequenceDiagram
+    participant D as Developer
+    participant P as CI/CD Pipeline
+    participant AWS as AWS/K8s Log
+    box rgb(40, 44, 52) Ghost-Architect Engine
+    participant GM as Ghost-Mentor
+    end
+    participant Terminal as Developer Terminal
 
+    D->>P: git push (Start Deployment)
+    P->>AWS: Execute aws/kubectl command
+    alt Error Occurs
+        AWS-->>GM: pipe stderr (AccessDenied/ImagePull)
+        activate GM
+        GM->>GM: Analyze Pattern via Regex
+        GM->>GM: Inject "Hardened by Design" Tip
+        GM-->>Terminal: Format & Output Actionable Fix 🛡️
+        deactivate GM
+        Terminal-->>D: Clear Guidance (No Googling)
+        D->>D: Quick Fix & Learning
+    else Success
+        AWS-->>P: Continue Deployment 🚀
+```
 
 # Example with Kubernetes Logs
 kubectl logs pod/my-app | python3 ghost_mentor.py
