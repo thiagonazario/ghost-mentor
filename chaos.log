@@ -1,0 +1,4 @@
+ERROR: (NoSuchBucket) when calling the ListObjectsV2 operation: The specified bucket does not exist. bucket dev-payments-raw-data
+docker push 1234567890.dkr.ecr.us-east-1.amazonaws.com/ghost-app:latest
+denied: requested access to the resource is denied
+An error occurred (AccessDenied) when calling the GetParameter operation: User is not authorized to perform: ssm:GetParameter on resource: arn:aws:ssm:us-east-1:1234567890:parameter/DB_PASSWORD
