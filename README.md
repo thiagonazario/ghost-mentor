@@ -79,5 +79,6 @@ aws s3 cp file.txt s3://locked-bucket/ 2>&1 | python3 ghost_mentor.py
 
 ## 🛡️ Sovereignty & Philosophy
 This tool is a core component of the Ghost-Architect ecosystem. Our mission is to transform DevOps into a "Hardened by Design" standard, where infrastructure is not just automated, but inherently secure and self-correcting.
+
 ---
 *Built for the next paradigm of Cloud Engineering.*
