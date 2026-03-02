@@ -1,89 +1,60 @@
-import re
 import sys
 
-class GhostMentorMVP:
+
+class GhostMentor:
+    """
+    Ghost-Mentor: An architectural interceptor for DevSecOps environments.
+    Designed to reduce developer friction by providing actionable 'Hardened by Design'
+    insights during runtime failures.
+    """
+
     def __init__(self):
-        # Knowledge Base: The core intelligence of the Mentor
-        # Hardened by Design patterns for common infrastructure failures
-        self.rules = [
-            {
-                "id": "IAM_ACCESS_DENIED",
-                "pattern": r"AccessDenied.*calling the (.*?) operation",
-                "message": "🚨 Security Alert: IAM Permission Gap",
-                "fix": "Your IAM Role lacks permissions for the '{0}' operation. Update your Terraform/CloudFormation policy.",
-                "hardened_tip": "Least Privilege Principle: Avoid 'Resource: *'. Always specify the exact ARN to minimize the attack surface."
-            },
-            {
-                "id": "S3_BUCKET_NOT_FOUND",
-                "pattern": r"NoSuchBucket.*bucket (.*)",
-                "message": "📍 Infrastructure Alert: Missing Target",
-                "fix": "The bucket '{0}' was not found. Verify the naming convention and region configuration in your IaC.",
-                "hardened_tip": "Immutability: Use Environment Variables for bucket names to prevent hardcoding between Staging and Production."
-            },
-            {
-                "id": "DOCKER_AUTH_FAIL",
-                "pattern": r"denied: requested access to the resource is denied",
-                "message": "🔑 Registry Alert: Auth Failure",
-                "fix": "Docker authentication failed. Verify your ECR/DockerHub credentials and login lifecycle.",
-                "hardened_tip": "Secrets Management: Use AWS Secrets Manager or Parameter Store. Never inject plain-text credentials into your pipeline."
-            },
-            {
-                "id": "K8S_IMAGE_PULL_ERR",
-                "pattern": r"ImagePullBackOff|ErrImagePull",
-                "message": "☸️ Kubernetes Alert: Container Startup Failure",
-                "fix": "The cluster cannot pull your Docker image. Check if the image name/tag is correct and if the 'imagePullSecrets' are configured.",
-                "hardened_tip": "Standardization: Always use a specific version tag (e.g., :v1.0.2) instead of ':latest'. This ensures predictable deployments and easier rollbacks."
-            },
-            {
-                "id": "K8S_CRASH_LOOP",
-                "pattern": r"CrashLoopBackOff",
-                "message": "🔄 Kubernetes Alert: Application Instability",
-                "fix": "Your container started but crashed immediately. Check the application logs using 'kubectl logs [pod_name]'.",
-                "hardened_tip": "Resilience: Configure 'Liveness' and 'Readiness' probes correctly. A crashing app usually points to missing Environment Variables or DB connection issues."
-            }
-        ]
+        # Hardened by Design knowledge base for automated feedback
+        self.hardened_tips = {
+            "S3": "🛡️ Hardened Tip: Ensure Block Public Access is ENABLED at the account level.",
+            "IAM": "🛡️ Hardened Tip: Use Permission Boundaries to limit the scope of IAM roles.",
+            "K8S": "🛡️ Hardened Tip: Always use NetworkPolicies to restrict pod-to-pod communication.",
+            "DOCKER": "🛡️ Hardened Tip: Run containers as non-root to prevent privilege escalation."
+        }
 
-    def analyze(self, log_content):
+    def intercept_error(self, exc_type, exc_value, exc_traceback):
         """
-        Scans the log content against Hardened rules to provide actionable insights.
+        Intercepts unhandled exceptions to inject architectural guidance
+        before the standard traceback.
         """
-        for rule in self.rules:
-            match = re.search(rule["pattern"], log_content, re.IGNORECASE)
-            if match:
-                # Capture the context (operation name or resource) if available
-                context = match.group(1) if match.groups() else "resource"
-                return self.format_output(rule, context)
-        
-        return "⚠️ Ghost Mentor: Unmapped error detected. Review detailed logs or escalate to SRE."
+        error_msg = str(exc_value)
+        print(f"\n❌ [GHOST-ERROR DETECTED]: {error_msg}")
 
-    def format_output(self, rule, context):
-        """
-        Formats the mentor feedback using the Ghost-Architect signature style.
-        """
-        return f"""
----
-### 👻 {rule['message']}
-**Resolution:** {rule['fix'].format(context)}
+        # Context analysis for 'Hardened by Design' tips
+        if "s3" in error_msg.lower():
+            print(self.hardened_tips["S3"])
+        elif "iam" in error_msg.lower():
+            print(self.hardened_tips["IAM"])
+        elif "kubernetes" in error_msg.lower() or "k8s" in error_msg.lower():
+            print(self.hardened_tips["K8S"])
+        elif "docker" in error_msg.lower():
+            print(self.hardened_tips["DOCKER"])
+        else:
+            print("🔍 Ghost-Mentor is analyzing this unknown failure for the next paradigm...")
 
-**🛡️ Hardened by Design Tip:** _{rule['hardened_tip']}_
+        # Maintain standard Python exception behavior
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
 
-*Solving Complex Problems with Elegance & Without Drama.*
----
-"""
+
+def boot_mentor():
+    """
+    Initializes the Ghost-Mentor interceptor in the current environment.
+    """
+    mentor = GhostMentor()
+    sys.excepthook = mentor.intercept_error
+    print("🚀 Ghost-Mentor: Active & Hardening your session.")
+
 
 if __name__ == "__main__":
-    mentor = GhostMentorMVP()
-    
-    # Check if data is being piped (|) into the script
-    if not sys.stdin.isatty():
-        # Read from pipeline input (e.g., stderr redirection)
-        error_input = sys.stdin.read()
-    elif len(sys.argv) > 1:
-        # Read from command line argument
-        error_input = sys.argv[1]
-    else:
-        # Default usage hint
-        error_input = "Usage: [command] 2>&1 | python3 ghost_mentor.py"
+    boot_mentor()
 
-    # Execution and output to terminal/PR
-    print(mentor.analyze(error_input))
+    # Simulation of a common cloud failure for interception testing
+    print("\n--- Testing Ghost-Mentor Interception ---")
+
+    # Example: Simulating an S3 error to trigger the Hardened Tip
+    raise Exception("Access Denied on S3 Bucket: ghost-protocol-data")
